@@ -1,0 +1,4 @@
+.idea
+main/static
+static
+db.sqlite3
