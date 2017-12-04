@@ -2,3 +2,4 @@
 main/static
 static
 db.sqlite3
+tmp
