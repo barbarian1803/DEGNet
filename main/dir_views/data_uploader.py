@@ -1,6 +1,8 @@
 from django.views import View
 from django.shortcuts import render
 from django import forms
+from django.core.files.storage import FileSystemStorage
+import chromelogger as console
 import json
 
 class DEGFileForm(forms.Form):
@@ -15,29 +17,47 @@ class DEGFileForm(forms.Form):
 
     uploader = forms.FileField(widget=forms.FileInput(attrs={'class': 'hidden', 'id': 'fileselector'}))
 
-
+    def is_valid(self):
+        return True
 
 
 class DataUploader(View):
+    context = {"title":"Data Uploader"}
 
     # TODO define a function to hande the uploaded file and check error
-    def __handle_uploaded_file__(self, f):
-        with open('tmp/name.txt', 'wb+') as destination:
-            for chunk in f.chunks():
-                destination.write(chunk)
+    def handle_uploaded_file(self, f):
+
+        if f.content_type != "text/csv":
+            return False
+
+        fout = open('tmp/'+f.name,"wb")
+        for chunk in f.chunks():
+            fout.write(chunk)
+
+        return True
 
     def get(self, request):
         form = DEGFileForm()
-        context = {"title": "Data uploader", "content": "This is content", "form": form}
-        return render(request, 'main/uploader.html', context)
+        self.context["form"] = form
+        return render(request, 'main/uploader.html', self.context)
 
     def post(self,request):
 
         form = DEGFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            self.__handle_uploaded_file__(request.FILES['uploader'])
-            context = {"title": "Data uploader", "result": "success", "form": form}
-        else:
-            context = {"title": "Data uploader", "result": "fail", "form": form}
 
-        return render(request, 'main/uploader.html', context)
+        fobj = request.FILES['uploader']
+
+        upload_result = self.handle_uploaded_file(fobj)
+
+        if form.is_valid():
+            if upload_result:
+                self.context["message"] = ""
+                self.context["result"] = "success"
+            else:
+                self.context["message"] = "File is not csv."
+                self.context["result"] = "fail"
+        else:
+            self.context["message"] = "Form is not valid."
+            self.context["result"] = "fail"
+
+        return render(request, 'main/uploader.html', self.context)

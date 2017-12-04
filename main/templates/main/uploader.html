@@ -9,23 +9,22 @@
     </h1>
 </section>
 <section class="content">
-    {% if result == 'success' %}
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="callout callout-success">
-                <h4>Error!</h4>
-
-                <p>Upload file.</p>
-            </div>
-        </div>
-    </div>
-    {% elif result == 'fail' %}
+    {% if result == 'fail' %}
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="callout callout-danger">
+                <h4>Error!</h4>
+                <p>Fail to upload file. {{message}}</p>
+            </div>
+        </div>
+    </div>
+    {% elif result == 'success' %}
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="callout callout-success">
                 <h4>Success!</h4>
 
-                <p>File has been uploaded.</p>
+                <p>File has been uploaded. {{message}}</p>
             </div>
         </div>
     </div>
