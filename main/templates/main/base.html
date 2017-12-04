@@ -1,6 +1,6 @@
 {% extends "main/adminlte.html" %}
 {% load static %}
-{% with "polls" as app %}
+{% with "main" as app %}
 
 
 {% block main-header %}
@@ -84,16 +84,16 @@
         </a>
     </li>
     <li>
-        <a href="pages/widgets.html">
+        <a href="{% url 'main:index' %}">
             <i class="fa fa-home"></i> <span>Home</span>
         </a>
     </li>
     <li class="treeview">
-        <a href="pages/widgets.html">
+        <a href="#">
             <i class="fa fa-arrow-circle-right"></i> <span>Analysis</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> Upload data</a></li>
+            <li><a href="{% url 'main:data_uploader' %}"><i class="fa fa-circle-o"></i> Upload data</a></li>
             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> View network</a></li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Analyse Network</a></li>
         </ul>
