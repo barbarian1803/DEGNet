@@ -22,9 +22,35 @@
         <ul class="nav navbar-nav">
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <span class="hidden-xs">User</span>
-            </a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="hidden-xs">
+                        {% if request.user.is_authenticated %}
+                        <i class="fa fa-user"></i> {{ request.user.username }}
+                        {% else %}
+                        ---
+                        {% endif %}
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <!-- Menu Body -->
+                    <li class="user-body">
+                        <div class="row">
+                            <div class="col-xs-6 text-center">
+                                <a href="#">My Data</a>
+                            </div>
+                            <div class="col-xs-6 text-center">
+                                <a href="#">My Account</a>
+                            </div>
+                        </div>
+                        <!-- /.row -->
+                    </li>
+                    <!-- Menu Footer-->
+                    <li class="user-footer">
+                        <div class="pull-right">
+                            <a href="{% url 'main:logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                        </div>
+                    </li>
+                </ul>
             </li>
             <!--&lt;!&ndash; Menu Body &ndash;&gt;-->
             <!--<li class="user-body">-->
@@ -54,7 +80,7 @@
             <!--</li>-->
             <!--Control Sidebar Toggle Button -->
             <!--<li>-->
-                <!--<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
+            <!--<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
             <!--</li>-->
         </ul>
     </div>
@@ -81,7 +107,8 @@
             <i class="fa fa-arrow-circle-right"></i> <span>Analysis</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="{% url 'main:data_uploader' %}"><i class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload data</a></li>
+            <li><a href="{% url 'main:data_uploader' %}"><i
+                    class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload data</a></li>
             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> View network</a></li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Analyse Network</a></li>
         </ul>
@@ -91,7 +118,8 @@
             <i class="fa fa-wrench"></i> <span>Tools</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="{% url 'main:gene_conversion' %}"><i class="fa fa-circle-o {% if gene_id_conv %}text-red{% endif %}"></i> Gene ID conversion</a></li>
+            <li><a href="{% url 'main:gene_conversion' %}"><i
+                    class="fa fa-circle-o {% if gene_id_conv %}text-red{% endif %}"></i> Gene ID conversion</a></li>
             <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> Enrichment analysis</a></li>
         </ul>
     </li>
