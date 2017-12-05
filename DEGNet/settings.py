@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['localhost:8000','localhost']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -49,10 +48,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-MIDDLEWARE_CLASSES = (
-    'chromelogger.DjangoMiddleware'
-)
 
 ROOT_URLCONF = 'DEGNet.urls'
 
@@ -80,8 +75,11 @@ WSGI_APPLICATION = 'DEGNet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "dgenet_db",
+        'USER': "root",
+        "PASSWORD": "BharataKalbuaji",
+        "HOST": "localhost"
     }
 }
 
@@ -124,3 +122,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+LOGIN_URL = 'main:index'

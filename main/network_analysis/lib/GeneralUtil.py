@@ -1,19 +1,28 @@
 class GeneralUtil:
 
     @staticmethod
-    def readGeneIDDatabase(fileName):
+    def readGeneIDDatabase(fileName, key):
+        key_db = {"ensembl": 0, "symbol": 1, "entrez": 2, "uniprot": 3}
         data = {}
         csv1 = open(fileName)
+
+
+
         for line in csv1:
             if "ensembl" in line:
                 continue
 
-            array=line.strip().split("\t")
-            if array[0] not in data:
-                data[array[0]] = {}
-            data[array[0]] = {"ensembl":array[0],"symbol":array[1],"entrez":array[2]}
+            array = line.strip().split("\t")
+
+            id = array[key_db[key]]
+
+            if id not in data:
+                data[id] = {}
+
+            data[id] = {"ensembl": array[0], "symbol": array[1], "entrez": array[2]}
+
             try:
-                data[array[0]]["uniprot"]=array[3]
+                data[id]["uniprot"] = array[3]
             except:
-                data[array[0]]["uniprot"]=""
+                data[id]["uniprot"] = ""
         return data

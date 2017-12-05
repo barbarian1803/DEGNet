@@ -1,13 +1,9 @@
-{% extends "main/base.html" %}
+{% extends "main/content.html" %}
 {% load static %}
 {% with "main" as app %}
 
 {% block content-wrapper %}
-<section class="content-header">
-    <h1>
-        Upload differential expression gene data
-    </h1>
-</section>
+{{ block.super }}
 <section class="content">
     {% if result == 'fail' %}
     <div class="row">
@@ -86,7 +82,7 @@
                                 {{ form.lfc }}
                             </div>
                             <div class="form-group">
-                                <label>CSV delimiter</label>
+                                <label>{{ form.delim.label }}</label>
                                 {{ form.delim }}
                             </div>
                             <div class="form-group">
@@ -117,11 +113,7 @@
     $('#fileselector').change(function(e){
         $('#helper').html($('#fileselector').val());
     });
-
-
-
 </script>
 {% endblock %}
-
 
 {% endwith %}

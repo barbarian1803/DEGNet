@@ -1,0 +1,71 @@
+{% extends "main/content.html" %}
+{% load static %}
+{% with "main" as app %}
+
+{% block content-wrapper %}
+{{ block.super }}
+
+<section class="content">
+
+</section>
+
+{% if not is_auth %}
+<div class="modal show" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-user"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text"><b>Anonymous</b></span>
+                                <p class="info-box-text">Start using this web anonymously</p>
+                                <button id="anon" type="button" class="btn btn-primary btn-sm"><i class="fa fa-play "></i> Start</button>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-key"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text"><b>Login</b></span>
+                                <p class="info-box-text">Go to login page.</p>
+                                <a id="login" href="{% url 'main:login' %}" class="btn btn-primary btn-sm"><i class="fa fa-play "></i> Login page</a>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i class="fa fa-user-plus"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text"><b>Create new account</b></span>
+                                <p class="info-box-text">Go to create account page.</p>
+                                <a href="{% url 'main:create_account' %}" class="btn btn-primary btn-sm"><i class="fa fa-play "></i> Create account</a>
+                            </div>
+                            <!-- /.info-box-content -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+{% endif %}
+
+{% endblock %}
+
+{% endwith %}
