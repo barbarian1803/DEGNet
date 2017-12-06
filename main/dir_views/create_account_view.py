@@ -2,6 +2,7 @@ from django.views import View
 from django.shortcuts import render
 from django import forms
 from django.contrib.auth.models import User
+import os
 
 class CreateAccountForm(forms.Form):
     username = forms.CharField(label="Username", max_length=255,
@@ -32,7 +33,7 @@ class CreateAccount(View):
     def get(self, request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("main:index"))
-
+        self.context["result"] = "none"
         return render(request, "main/create_account_form.html", self.context)
 
     def post(self, request):
@@ -65,6 +66,10 @@ class CreateAccount(View):
                 newuser.set_password(password)
                 newuser.email = email
                 newuser.save()
+
+                if not os.path.exists("user_dir/"+username):
+                    os.makedirs("user_dir/"+username)
+
                 self.context["result"] = "success"
                 self.context["message"] = "User successfully created, please login"
 
