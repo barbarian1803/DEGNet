@@ -1,7 +1,7 @@
 from django.views import View
 from django.shortcuts import render
 from django import forms
-from main.network_analysis.lib.GeneralUtil import *
+from network_analysis.lib.GeneralUtil import *
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
@@ -27,7 +27,7 @@ class GeneConversion(View):
     def handleUpload(self, post_data, file_data):
         convert_from = post_data["convert_from"]
         convert_to = post_data["convert_to"]
-        gene_db = GeneralUtil.readGeneIDDatabase("main/network_analysis/external_database/all_gene_id.csv", convert_from)
+        gene_db = GeneralUtil.readGeneIDDatabase("network_analysis/external_database/all_gene_id.csv", convert_from)
 
         fobj = file_data['uploader']
         result = {}
@@ -48,7 +48,7 @@ class GeneConversion(View):
     def handleNotUpload(self, post_data):
         convert_from = post_data["convert_from"]
         convert_to = post_data["convert_to"]
-        gene_db = GeneralUtil.readGeneIDDatabase("main/network_analysis/external_database/all_gene_id.csv", convert_from)
+        gene_db = GeneralUtil.readGeneIDDatabase("network_analysis/external_database/all_gene_id.csv", convert_from)
         dataset = post_data["dataset"]
 
         result = {}
