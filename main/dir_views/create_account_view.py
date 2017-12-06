@@ -33,7 +33,9 @@ class CreateAccount(View):
     def get(self, request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse("main:index"))
-        self.context["result"] = "none"
+
+        self.context["result"] = None
+
         return render(request, "main/create_account_form.html", self.context)
 
     def post(self, request):

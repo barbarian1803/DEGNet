@@ -22,11 +22,11 @@ class DEGFileForm(forms.Form):
 
 @method_decorator(login_required, name='dispatch')
 class DataUploader(View):
-    context = {"title": "Data Uploader", "content_header": "Upload differential expression gene data", "upload_data": True, "analysis": True}
+    context = {"title": "Data Uploader ", "content_header": "Upload differential expression gene data", "upload_data": True, "analysis": True}
 
-    def handle_uploaded_file(self, f, post_data):
+    def handle_uploaded_file(self, request, f, post_data):
 
-        folder_name = "tmp/"
+        folder_name = "user_dir/"+request.session["temp_name"]+"/"
 
         if f.content_type != "text/csv":
             return False
@@ -39,7 +39,7 @@ class DataUploader(View):
             fout.write(chunk)
 
         data = {}
-        data["file_name"] = 'tmp/'+f.name
+        data["file_name"] = folder_name+f.name
         data["delim"] = post_data["delim"]
         data["dataset"] = post_data["dataset"]
         data["lfc"] = post_data["lfc"]
@@ -51,6 +51,8 @@ class DataUploader(View):
         return True
 
     def get(self, request):
+        self.context["result"] = None
+
         form = DEGFileForm()
         self.context["form"] = form
         return render(request, 'main/deg_file_uploader.html', self.context)
@@ -61,7 +63,7 @@ class DataUploader(View):
 
         fobj = request.FILES['uploader']
 
-        upload_result = self.handle_uploaded_file(fobj,request.POST)
+        upload_result = self.handle_uploaded_file(request, fobj,request.POST)
 
         if form.is_valid():
             if upload_result:
