@@ -10,7 +10,7 @@ urlpatterns = [
     url('gene_conversion', GeneConversion.as_view(), name='gene_conversion'),
     url('anon_auth', anon_auth, name='anon_auth'),
     url('logout', logout_auth, name='logout'),
-    url('login', Index.as_view(), name='login'),
-    url('create_account', Index.as_view(), name='create_account'),
+    url('login', Login.as_view(), name='login'),
+    url('create_account', CreateAccount.as_view(), name='create_account'),
     url('', Index.as_view(), name='index'),
 ]
