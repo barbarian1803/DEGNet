@@ -1,0 +1,40 @@
+{% extends "main/content.html" %}
+{% load static %}
+{% with "main" as app %}
+
+{% block content-wrapper %}
+{{ block.super }}
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid" id="viewport_box">
+                <div class="box-header">
+                    <button class="btn btn-primary btn-sm" id="loadJSON">Load network</button>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus" style="color: black"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="viewport_container" class="box-body">
+                    <div id="viewport"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block custom-js %}
+<script type="text/javascript" src="{% static '' %}{{app}}/network/cytoscape.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/buildnetwork.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/utility.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/readJSON.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/logFCset.js"></script>
+{% endblock %}
+
+{% endwith %}
+

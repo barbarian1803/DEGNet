@@ -107,9 +107,16 @@
             <i class="fa fa-arrow-circle-right"></i> <span>Analysis</span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="{% url 'main:data_uploader' %}"><i
-                    class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload data</a></li>
-            <li><a href="pages/charts/morris.html"><i class="fa fa-circle-o"></i> View network</a></li>
+            <li>
+                <a href="{% url 'main:data_uploader' %}">
+                    <i class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload data
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'main:network_view' %}">
+                    <i class="fa fa-circle-o {% if network_view %}text-red{% endif %}"></i> View network
+                </a>
+            </li>
             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Analyse Network</a></li>
         </ul>
     </li>

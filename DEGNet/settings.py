@@ -25,7 +25,7 @@ SECRET_KEY = 'xndo$j%!k)()2-9!-(biq6h+i2kcw!)23y527!w9g*sb3&31+v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost:8000','localhost']
+ALLOWED_HOSTS = ['localhost:8000', 'localhost', '192.168.11.61']
 
 
 # Application definition
