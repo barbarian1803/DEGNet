@@ -52,36 +52,6 @@
                     </li>
                 </ul>
             </li>
-            <!--&lt;!&ndash; Menu Body &ndash;&gt;-->
-            <!--<li class="user-body">-->
-            <!--<div class="row">-->
-            <!--<div class="col-xs-4 text-center">-->
-            <!--<a href="#">Followers</a>-->
-            <!--</div>-->
-            <!--<div class="col-xs-4 text-center">-->
-            <!--<a href="#">Sales</a>-->
-            <!--</div>-->
-            <!--<div class="col-xs-4 text-center">-->
-            <!--<a href="#">Friends</a>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--&lt;!&ndash; /.row &ndash;&gt;-->
-            <!--</li>-->
-            <!--&lt;!&ndash; Menu Footer&ndash;&gt;-->
-            <!--<li class="user-footer">-->
-            <!--<div class="pull-left">-->
-            <!--<a href="#" class="btn btn-default btn-flat">Profile</a>-->
-            <!--</div>-->
-            <!--<div class="pull-right">-->
-            <!--<a href="#" class="btn btn-default btn-flat">Sign out</a>-->
-            <!--</div>-->
-            <!--</li>-->
-            <!--</ul>-->
-            <!--</li>-->
-            <!--Control Sidebar Toggle Button -->
-            <!--<li>-->
-            <!--<a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>-->
-            <!--</li>-->
         </ul>
     </div>
 </nav>
@@ -109,7 +79,12 @@
         <ul class="treeview-menu">
             <li>
                 <a href="{% url 'main:data_uploader' %}">
-                    <i class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload data
+                    <i class="fa fa-circle-o {% if upload_data %}text-red{% endif %}"></i> Upload gene data
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'main:network_uploader' %}">
+                    <i class="fa fa-circle-o {% if upload_network %}text-red{% endif %}"></i> Upload new network
                 </a>
             </li>
             <li>

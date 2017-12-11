@@ -1,0 +1,21 @@
+{
+  "networks": [
+    {
+      "id": "transfac_pro_network",
+      "name": "Transfac Pro Network",
+      "main_file": "combine_network_filtered_transfac.csv",
+      "pos_file": "combine_network_filtered_transfac_pos.csv",
+      "desc": "Network created from Transfac Pro PWM data",
+      "type": "default"
+    },
+    {
+      "id": "combine_open_network",
+      "name": "Combine Open Network",
+      "main_file": "combined_alternatives_network.csv",
+      "pos_file": "combined_alternatives_network_pos.csv",
+      "description": "Network created from combination of publicly available data: Pazar, TFacts, TRRust",
+      "type": "default"
+
+    }
+  ]
+}

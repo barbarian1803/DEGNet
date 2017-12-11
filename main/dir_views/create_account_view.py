@@ -70,7 +70,10 @@ class CreateAccount(View):
                 newuser.save()
 
                 if not os.path.exists("user_dir/"+username):
-                    os.makedirs("user_dir/"+username)
+                    os.makedirs("user_dir/" + username)
+                    os.makedirs("user_dir/" + username + "/network")
+                    os.makedirs("user_dir/" + username + "/deg_file")
+                    os.makedirs("user_dir/" + username + "/result")
 
                 self.context["result"] = "success"
                 self.context["message"] = "User successfully created, please login"

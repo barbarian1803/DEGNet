@@ -11,7 +11,11 @@ def anon_auth(request):
     login(request, user)
 
     if not os.path.exists("user_dir/" + random_str):
-        os.makedirs("user_dir/" + random_str)
+        basepath = "user_dir/" + random_str
+        os.makedirs(basepath)
+        os.makedirs(basepath + "/network")
+        os.makedirs(basepath + "/deg_file")
+        os.makedirs(basepath + "/result")
 
     return HttpResponseRedirect(reverse("main:index"))
 

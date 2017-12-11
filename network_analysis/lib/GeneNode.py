@@ -21,13 +21,13 @@ class GeneNode:
             self.nodeType = "protein"
 
     def printNode(self):
-        print "GeneID : "+self.geneID
-        print "Type : "+self.nodeType
-        print "Score : "+str(self.score)
-        print "OutwardEdge:"
-        print self.printEdge(self.outWardEdge)
-        print "InwardEdge:"
-        print self.printEdge(self.inWardEdge)
+        print("GeneID : "+self.geneID)
+        print("Type : "+self.nodeType)
+        print("Score : "+str(self.score))
+        print("OutwardEdge:")
+        print(self.printEdge(self.outWardEdge))
+        print("InwardEdge:")
+        print(self.printEdge(self.inWardEdge))
 
     def addInWardNode(self,node):
         self.inWardEdge.add(node)

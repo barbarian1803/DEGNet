@@ -26,7 +26,7 @@ class DataUploader(View):
 
     def handle_uploaded_file(self, request, f, post_data):
 
-        folder_name = "user_dir/"+request.session["temp_name"]+"/"
+        folder_name = "user_dir/"+request.session["temp_name"]+"/deg_file/"
 
         if f.content_type != "text/csv":
             return False

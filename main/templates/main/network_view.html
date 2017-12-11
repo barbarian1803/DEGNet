@@ -11,15 +11,28 @@
         <div class="col-md-12">
             <div class="box box-solid" id="viewport_box">
                 <div class="box-header">
-                    <button class="btn btn-primary btn-sm" id="loadJSON">Load network</button>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i class="fa fa-minus" style="color: black"></i>
-                        </button>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-addon">Network: </span>
+                                <select id="network_select" class="form-control"></select>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm btn-flat" id="loadNetwork"><i class="fa fa-check"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-default btn-sm" data-widget="collapse"><i
+                                        class="fa fa-minus" style="color: black"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div id="viewport_container" class="box-body">
-                    <div id="viewport"></div>
+                    <br>
+                    <div id="viewport_container" class="box-body">
+                        <div id="viewport"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -30,10 +43,9 @@
 
 {% block custom-js %}
 <script type="text/javascript" src="{% static '' %}{{app}}/network/cytoscape.js"></script>
-<script type="text/javascript" src="{% static '' %}{{app}}/network/buildnetwork.js"></script>
-<script type="text/javascript" src="{% static '' %}{{app}}/network/utility.js"></script>
-<script type="text/javascript" src="{% static '' %}{{app}}/network/readJSON.js"></script>
-<script type="text/javascript" src="{% static '' %}{{app}}/network/logFCset.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/enlargeNetwork.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/loadNetwork.js"></script>
+<script type="text/javascript" src="{% static '' %}{{app}}/network/buildNetwork.js"></script>
 {% endblock %}
 
 {% endwith %}
