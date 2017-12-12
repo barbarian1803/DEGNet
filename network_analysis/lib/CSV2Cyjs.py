@@ -1,17 +1,18 @@
 import json
 import os.path
 import pandas as pd
+from django.conf import settings
 
 def get_avail_network(username):
     networks = []
 
     # load default network
-    metadata_default = open("network_analysis/database/metadata.json", "r")
+    metadata_default = open(settings.BASE_DIR+"/network_analysis/database/metadata.json", "r")
     default_networks = json.loads(metadata_default.read())["networks"]
     networks = networks + default_networks
 
     # load user network
-    usr_metadata = "user_dir/" + username + "/network/metadata.json"
+    usr_metadata = settings.BASE_DIR+"/user_dir/" + username + "/network/metadata.json"
     if os.path.isfile(usr_metadata):
         metadata_user = open(usr_metadata, "r")
         user_networks = json.loads(metadata_user.read())["networks"]
@@ -29,9 +30,9 @@ def loadnetwork(username, networkname, fulldata=False):
         if n["id"] == networkname:
             basedir = ""
             if n["type"]=="default":
-                basedir = "network_analysis/database/"
+                basedir = settings.BASE_DIR+"/network_analysis/database/"
             elif n["type"]=="user":
-                basedir = "user_dir/"+username+"/network/"
+                basedir = settings.BASE_DIR+"/user_dir/"+username+"/network/"
 
             main_file = basedir + n["main_file"]
             pos_file = basedir + n["pos_file"]
@@ -43,10 +44,6 @@ def loadnetwork(username, networkname, fulldata=False):
     return csv2cyjs(main_file, pos_file, fulldata)
 
 def csv2cyjs(network_file,network_pos_file,fulldata=False):
-    cyjs = {"nodes": [], "edges": []}
-    # nodes = { "position":{"x":"", "y":""}, "data":{"id":"", "name":""}}
-    # edges = { "data":{"source":"", "interaction":"", "target":"", "name": "", "id": ""}}
-
     nodes = []
     edges = []
 

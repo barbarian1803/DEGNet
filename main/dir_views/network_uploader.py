@@ -3,9 +3,8 @@ from django.shortcuts import render
 from django import forms
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from urllib.parse import urlencode, quote
-import requests
-import json
+from django.conf import settings
+from network_analysis.lib.CSV2Cyjs import csv2cyjs
 import os
 from network_analysis.lib.CSV2Cyjs import *
 
@@ -32,6 +31,14 @@ class NetworkUploader(View):
         "upload_network": True, "analysis": True
     }
 
+    def write_pos_file(self, file_name):
+        cyjs_json = csv2cyjs(file_name, "")
+        script_dir = settings.SCRIPT_ROOT+"/cytoscapeheadless.js"
+        output = file_name.replace(".csv", "_pos.csv")
+        from subprocess import call
+        call(["node", script_dir, cyjs_json, output])
+        return output
+
     def handle_uploaded_file(self, request, f, post_data):
         post_data = post_data.copy()
         folder_name = "user_dir/"+request.session["temp_name"]+"/network/"
@@ -45,6 +52,8 @@ class NetworkUploader(View):
         for chunk in f.chunks():
             fout.write(chunk)
         fout.close()
+
+        pos_file = self.write_pos_file(file_name).replace(folder_name, "")
 
         # write network metadata here
         user_networks = []
@@ -60,7 +69,7 @@ class NetworkUploader(View):
             "id": post_data["name"].lower().replace(" ", "_"),
             "name": post_data["name"],
             "main_file": f.name,
-            "pos_file": "",
+            "pos_file": pos_file,
             "desc": post_data["desc"],
             "type": "user"
         }]

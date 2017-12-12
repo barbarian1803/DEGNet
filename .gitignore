@@ -3,3 +3,4 @@ main/static
 static
 db.sqlite3
 user_dir
+shellscript/node_modules
