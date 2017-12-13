@@ -6,7 +6,7 @@ app_name = 'main'
 
 urlpatterns = [
     url('network_view', Network.as_view(), name='network_view'),
-    url('data_uploader', DataUploader.as_view(), name='data_uploader'),
+    url('deg_uploader', DEGUploader.as_view(), name='deg_uploader'),
     url('network_uploader', NetworkUploader.as_view(), name='network_uploader'),
     url('gene_conversion', GeneConversion.as_view(), name='gene_conversion'),
     url('anon_auth', anon_auth, name='anon_auth'),

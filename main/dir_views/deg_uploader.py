@@ -21,7 +21,7 @@ class DEGFileForm(forms.Form):
         return True
 
 @method_decorator(login_required, name='dispatch')
-class DataUploader(View):
+class DEGUploader(View):
     context = {"title": "Data Uploader ", "content_header": "Upload differential expression gene data", "upload_data": True, "analysis": True}
 
     def handle_uploaded_file(self, request, f, post_data):

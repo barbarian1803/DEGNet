@@ -3,6 +3,7 @@ import os.path
 import pandas as pd
 from django.conf import settings
 
+
 def get_avail_network(username):
     networks = []
 
@@ -21,6 +22,7 @@ def get_avail_network(username):
     return networks
 
 def loadnetwork(username, networkname, fulldata=False):
+
     networks = get_avail_network(username)
 
     main_file = ""
@@ -43,7 +45,28 @@ def loadnetwork(username, networkname, fulldata=False):
 
     return csv2cyjs(main_file, pos_file, fulldata)
 
+def getNodeData(id, geneDB):
+    retval = {"id": id, "name": id}
+
+    row = geneDB.loc[(geneDB["symbol"] == id) | (geneDB["ensembl"] == id) | (str(geneDB["entrez"]) == str(id))]
+
+    if not row.empty:
+        retval["ensembl"] =row["ensembl"].max()
+        retval["symbol"] = row["symbol"].max()
+        retval["entrez"] = str(row["entrez"].max())
+    else:
+        retval["ensembl"] = id
+        retval["symbol"] = id
+        retval["entrez"] = id
+    return retval
+
+
 def csv2cyjs(network_file,network_pos_file,fulldata=False):
+    gene_id_file = settings.BASE_DIR + "/network_analysis/external_database/all_gene_id_bak.csv"
+
+    geneDB = pd.read_csv(gene_id_file, sep="\t", header=0)
+    geneDB = geneDB.drop_duplicates(["ensembl", "symbol", "entrez"])
+
     nodes = []
     edges = []
 
@@ -52,7 +75,8 @@ def csv2cyjs(network_file,network_pos_file,fulldata=False):
     try:
         pos = pd.read_csv(network_pos_file, sep="\t", header=0)
         for index, row in pos.iterrows():
-            obj_node = {"position": {"x": row[1], "y": row[2]}, "data": {"id": row[0], "name": row[0] } }
+
+            obj_node = {"position": {"x": row[1], "y": row[2]}, "data": getNodeData(row[0], geneDB)}
             nodes.append(obj_node)
     except:
         nodeset = set()
@@ -62,11 +86,14 @@ def csv2cyjs(network_file,network_pos_file,fulldata=False):
 
             if source not in nodeset:
                 nodeset.add(source)
-                obj_node = {"data": {"id": source, "name": source}}
+
+                obj_node = {"data": getNodeData(source, geneDB)}
                 nodes.append(obj_node)
+
             if target not in nodeset:
                 nodeset.add(target)
-                obj_node = {"data": {"id": target, "name": target}}
+
+                obj_node = {"data": getNodeData(target, geneDB)}
                 nodes.append(obj_node)
 
     for index, row in main.iterrows():
