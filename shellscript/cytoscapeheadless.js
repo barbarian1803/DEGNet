@@ -1,13 +1,14 @@
 var cytoscape = require("cytoscape");
+
 var fs = require('fs');
 
 
-var json = JSON.parse(process.argv[2])
-var output = process.argv[3]
+var json = JSON.parse('{{json_data}}')
+var output = '{{output_file}}'
 
 var CytoscapeObj;
 
-var options = {
+var cose_layout = {
   name: 'cose',
 
   // Called on `layoutready`
@@ -87,7 +88,45 @@ var options = {
   zoom:0.3
 };
 
+var circle_layout = {name:'circle',fit:false,zoom:0.3}
+
+var concentric_layout = {
+  name: 'concentric',
+
+  fit: true, // whether to fit the viewport to the graph
+  padding: 30, // the padding on fit
+  startAngle: 3 / 2 * Math.PI, // where nodes start in radians
+  sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
+  clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
+  equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
+  minNodeSpacing: 10, // min spacing between outside of nodes (used for radius adjustment)
+  boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+  avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+  nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+  height: undefined, // height of layout area (overrides container height)
+  width: undefined, // width of layout area (overrides container width)
+  spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
+  concentric: function( node ){ // returns numeric value for each node, placing higher nodes in levels towards the centre
+  return node.degree();
+  },
+  levelWidth: function( nodes ){ // the letiation of concentric values in each level
+  return nodes.maxDegree() / 4;
+  },
+  animate: false, // whether to transition the node positions
+  animationDuration: 500, // duration of animation in ms if enabled
+  animationEasing: undefined, // easing of animation if enabled
+  animateFilter: function ( node, i ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+  ready: undefined, // callback on layoutready
+  stop: undefined, // callback on layoutstop
+  transform: function (node, position ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
+};
+
 buildCytoscape(json,enlargeNetwork);
+
+
+
+
+//--------------------------------------------------------------------------------------------------
 
 function buildCytoscape(json,enlargeNetwork){
 	CytoscapeObj = cytoscape({
@@ -97,15 +136,25 @@ function buildCytoscape(json,enlargeNetwork){
 
 
 	if(CytoscapeObj.nodes()[0].position().x == 0 && CytoscapeObj.nodes()[0].position().y == 0){
-	    var layout = null;
-	    layout = CytoscapeObj.layout(options);
-	    layout.pon('layoutstop').then(function( event ){
+	   var layout = null;
+
+	   if(CytoscapeObj.nodes().length > 400){
+            layout = CytoscapeObj.layout(circle_layout);
+	   }else if(CytoscapeObj.nodes().length > 200){
+            layout = CytoscapeObj.layout(concentric_layout);
+	   }else{
+            layout = CytoscapeObj.layout(cose_layout);
+	   }
+
+	    layout.promiseOn('layoutstop').then(function( event ){
             enlargeNetwork(0.5, CytoscapeObj);
             printNetworkPosition(CytoscapeObj);
         });
 	    layout.run();
 	}
 }
+
+//--------------------------------------------------------------------------------------------------
 
 function printNetworkPosition(obj){
     var toWrite = "Node\tPosX\tPosY\n";
@@ -119,6 +168,8 @@ function printNetworkPosition(obj){
     }
     fs.writeFile(output, toWrite);
 }
+
+//--------------------------------------------------------------------------------------------------
 
 function enlargeNetwork(factor,CytoscapeObj){
 	//get corner of the network

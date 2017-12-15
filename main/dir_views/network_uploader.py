@@ -8,6 +8,7 @@ from network_analysis.lib.CSV2Cyjs import csv2cyjs
 import os
 from network_analysis.lib.CSV2Cyjs import *
 
+
 class NetworkFileForm(forms.Form):
     name = forms.CharField(label="Network name", max_length=255, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'network name'}))
     desc = forms.CharField(label="Network description", max_length=255,
@@ -23,6 +24,7 @@ class NetworkFileForm(forms.Form):
     def is_valid(self):
         return True
 
+
 @method_decorator(login_required, name='dispatch')
 class NetworkUploader(View):
     context = {
@@ -31,17 +33,32 @@ class NetworkUploader(View):
         "upload_network": True, "analysis": True
     }
 
-    def write_pos_file(self, file_name):
-        cyjs_json = csv2cyjs(file_name, "")
-        script_dir = settings.SCRIPT_ROOT+"/cytoscapeheadless.js"
-        output = file_name.replace(".csv", "_pos.csv")
+    def write_pos_file(self, folder_name, file_name, request):
+        from django.utils.crypto import get_random_string
         from subprocess import call
-        call(["node", script_dir, cyjs_json, output])
-        return output
+        import os
+
+        cyjs_json = csv2cyjs(file_name, "")
+        output = file_name.replace(".csv", "_pos.csv")
+
+        # generate js script to generate network pos file
+        script_tpl = open(settings.SCRIPT_ROOT+"/cytoscapeheadless.js", "r").read()
+        script_tpl = script_tpl.replace("{{json_data}}", cyjs_json)
+        script_tpl = script_tpl.replace("{{output_file}}", output)
+
+        script_file_name = settings.SCRIPT_ROOT+"/"+get_random_string(length=10)+".js"
+        script_file = open(script_file_name, "w")
+        script_file.write(script_tpl)
+        script_file.close()
+
+        call(["node", script_file_name])
+        os.remove(script_file_name)
+
+        return output.replace(folder_name, "")
 
     def handle_uploaded_file(self, request, f, post_data):
         post_data = post_data.copy()
-        folder_name = "user_dir/"+request.session["temp_name"]+"/network/"
+        folder_name = settings.BASE_DIR + "/user_dir/"+request.session["temp_name"]+"/network/"
 
         if f.content_type != "text/csv":
             return False
@@ -53,11 +70,11 @@ class NetworkUploader(View):
             fout.write(chunk)
         fout.close()
 
-        pos_file = self.write_pos_file(file_name).replace(folder_name, "")
+        pos_file = self.write_pos_file(folder_name, file_name, request)
 
         # write network metadata here
         user_networks = []
-        usr_metadata = "user_dir/" + request.session["temp_name"] + "/network/metadata.json"
+        usr_metadata = settings.BASE_DIR + "/user_dir/" + request.session["temp_name"] + "/network/metadata.json"
         metadata_user = None
 
         if os.path.isfile(usr_metadata):

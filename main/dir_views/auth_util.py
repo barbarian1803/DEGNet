@@ -2,6 +2,7 @@ from django.http.response import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from django.conf import settings
 import os
 
 def anon_auth(request):
@@ -11,7 +12,7 @@ def anon_auth(request):
     login(request, user)
 
     if not os.path.exists("user_dir/" + random_str):
-        basepath = "user_dir/" + random_str
+        basepath = settings.BASE_DIR + "/user_dir/" + random_str
         os.makedirs(basepath)
         os.makedirs(basepath + "/network")
         os.makedirs(basepath + "/deg_file")

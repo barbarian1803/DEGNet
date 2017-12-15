@@ -62,7 +62,7 @@ def getNodeData(id, geneDB):
 
 
 def csv2cyjs(network_file,network_pos_file,fulldata=False):
-    gene_id_file = settings.BASE_DIR + "/network_analysis/external_database/all_gene_id_bak.csv"
+    gene_id_file = settings.BASE_DIR + "/network_analysis/external_database/all_gene_id.csv"
 
     geneDB = pd.read_csv(gene_id_file, sep="\t", header=0)
     geneDB = geneDB.drop_duplicates(["ensembl", "symbol", "entrez"])
