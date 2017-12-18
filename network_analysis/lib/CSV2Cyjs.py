@@ -31,9 +31,9 @@ def loadnetwork(username, networkname, fulldata=False):
     for n in networks:
         if n["id"] == networkname:
             basedir = ""
-            if n["type"]=="default":
+            if n["type"] == "default":
                 basedir = settings.BASE_DIR+"/network_analysis/database/"
-            elif n["type"]=="user":
+            elif n["type"] == "user":
                 basedir = settings.BASE_DIR+"/user_dir/"+username+"/network/"
 
             main_file = basedir + n["main_file"]
@@ -45,63 +45,53 @@ def loadnetwork(username, networkname, fulldata=False):
 
     return csv2cyjs(main_file, pos_file, fulldata)
 
-def getNodeData(id, geneDB):
-    retval = {"id": id, "name": id}
-
-    row = geneDB.loc[(geneDB["symbol"] == id) | (geneDB["ensembl"] == id) | (str(geneDB["entrez"]) == str(id))]
-
-    if not row.empty:
-        retval["ensembl"] =row["ensembl"].max()
-        retval["symbol"] = row["symbol"].max()
-        retval["entrez"] = str(row["entrez"].max())
-    else:
-        retval["ensembl"] = id
-        retval["symbol"] = id
-        retval["entrez"] = id
+def getNodeData(row):
+    retval = {"id": row[0], "name": row[0]}
+    key = {3: "ensembl", 4: "symbol", 5: "entrez"}
+    for i in range(3, 6):
+        if row[i] == row[i]:
+            retval[key[i]] = row[i]
+        else:
+            retval[key[i]] = row[0]
     return retval
 
 
 def csv2cyjs(network_file,network_pos_file,fulldata=False):
+    # read gene id database
     gene_id_file = settings.BASE_DIR + "/network_analysis/external_database/all_gene_id.csv"
 
     geneDB = pd.read_csv(gene_id_file, sep="\t", header=0)
-    geneDB = geneDB.drop_duplicates(["ensembl", "symbol", "entrez"])
+
+    # read network file
+    main = pd.read_csv(network_file, sep="\t", header=0)
 
     nodes = []
     edges = []
 
-    main = pd.read_csv(network_file, sep="\t", header=0)
-
     try:
+        # read pos file if exists
         pos = pd.read_csv(network_pos_file, sep="\t", header=0)
-        for index, row in pos.iterrows():
-
-            obj_node = {"position": {"x": row[1], "y": row[2]}, "data": getNodeData(row[0], geneDB)}
-            nodes.append(obj_node)
     except:
-        nodeset = set()
+        pos = pd.DataFrame(columns=["Node", "PosX", "PosY"])
         for index, row in main.iterrows():
-            source = row["Source"]
-            target = row["Target"]
+            data = [{"Node": row["Source"], "PosX": 0, "PosY": 0}, {"Node": row["Target"], "PosX": 0, "PosY": 0}]
+            pos = pos.append(data, ignore_index=True)
 
-            if source not in nodeset:
-                nodeset.add(source)
+    # merge depend on the network gene identifier, now it is set to ensembl
+    pos = pd.merge(pos, geneDB, how="left", left_on="Node", right_on="ensembl")
+    pos = pos.drop_duplicates(subset=["Node", "PosX", "PosY"])
 
-                obj_node = {"data": getNodeData(source, geneDB)}
-                nodes.append(obj_node)
-
-            if target not in nodeset:
-                nodeset.add(target)
-
-                obj_node = {"data": getNodeData(target, geneDB)}
-                nodes.append(obj_node)
+    for index, row in pos.iterrows():
+        obj_node = {"position": {"x": row[1], "y": row[2]}, "data": getNodeData(row)}
+        nodes.append(obj_node)
 
     for index, row in main.iterrows():
+
         obj_edge = { "data": {"source": row["Source"], "interaction": row["Type"], "target": row["Target"], "name": row["Source"]+"-"+row["Target"], "id": row["Source"]+"-"+row["Target"]}}
         edges.append(obj_edge)
-
     cyjs_obj = {"nodes": nodes, "edges": edges}
 
     if fulldata:
         cyjs_obj = {"data": {"name": network_file}, "elements": cyjs_obj}
+
     return json.dumps(cyjs_obj)
